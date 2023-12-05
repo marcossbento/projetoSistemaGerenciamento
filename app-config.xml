@@ -1,0 +1,6 @@
+<config>        
+
+    <!-- Exemplo Acesso no Laboratório INFO4 -->
+    <database url="jdbc:mysql://127.0.0.1:3306/sgev" user="root" password="root1"/>
+
+</config>
