@@ -1,0 +1,6 @@
+<config>        
+
+    <!-- Acesso WB -->
+    <database url="jdbc:mysql://127.0.0.1:3306/sgev" user="root" password="naruto4600"></database>
+
+</config>

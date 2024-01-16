@@ -1,6 +1,7 @@
 package view.fornecedor;
 
 
+import controller.LogTrack;
 import view.funcionario.*;
 import controller.ResultSetTableModel;
 import java.sql.SQLException;
@@ -49,7 +50,7 @@ public class JPanelConsultaFornecedor extends javax.swing.JPanel {
                 try {
                     result.setQuery(query);
                 } catch (SQLException ex) {
-                    Logger.getLogger(JPanelConsultaFornecedor.class.getName()).log(Level.SEVERE, null, ex);
+                    LogTrack.getInstance().addException(ex, false, crud);
                 }
             }
         });
@@ -77,13 +78,13 @@ public class JPanelConsultaFornecedor extends javax.swing.JPanel {
                     result.setQuery(query);
                     jButtonAlterar.setEnabled(true);
                 } catch (SQLException ex) {
-                    Logger.getLogger(JPanelConsultaFornecedor.class.getName()).log(Level.SEVERE, null, ex);
+                    LogTrack.getInstance().addException(ex, false, crud);
                 }
             }
         });
     
         } catch (SQLException ex) {
-            Logger.getLogger(JPanelConsultaFornecedor.class.getName()).log(Level.SEVERE, null, ex);
+            LogTrack.getInstance().addException(ex);
         }
     }  
 
@@ -167,30 +168,27 @@ public class JPanelConsultaFornecedor extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(92, 92, 92)
-                        .addComponent(jLabelFiltro)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
-                        .addComponent(jButtonFiltrar1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonSelecionar)
-                        .addGap(27, 27, 27)
-                        .addComponent(jButtonAlterar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonAdicionar1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(109, 109, 109)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 582, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(92, 92, 92)
+                .addComponent(jLabelFiltro)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
+                .addComponent(jButtonFiltrar1)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonSelecionar)
+                .addGap(27, 27, 27)
+                .addComponent(jButtonAlterar)
+                .addGap(61, 61, 61)
+                .addComponent(jButtonAdicionar1)
                 .addContainerGap(137, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(jScrollPane3)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)

@@ -7,3 +7,4 @@
 # ignorar a pasta build (binários) do projeto
 /build/
 /dist/
+/nbproject/private/

@@ -1,9 +1,12 @@
 package model;
 
 import controller.DataAccessObject;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 // mapeamento com a tabela especialidades
 public class Venda extends DataAccessObject {
@@ -18,7 +21,7 @@ public class Venda extends DataAccessObject {
     
     
     public Venda() {
-        super("vendas");
+        super("Vendas");
     }    
 
     public int getIdVenda() {
@@ -30,7 +33,7 @@ public class Venda extends DataAccessObject {
         if( this.idVenda !=  idVenda ) {
             this.idVenda = idVenda;
             // informar que um campo da tabela foi alterado
-            addChange("id_venda", 
+            addChange("id_vendas", 
                     this.idVenda);
         }
     }
@@ -55,34 +58,20 @@ public class Venda extends DataAccessObject {
             
             if( funcionario != null ) {
                 
-                this.funcionario = new Funcionario();
-                this.funcionario.setIdFuncionario(funcionario.getIdFuncionario());
-                this.funcionario.load();
+                this.funcionario = funcionario;
                 addChange( "id_funcionario", this.funcionario.getIdFuncionario());
-                
             }
             
         } else {
-            
-            if( funcionario == null ) {
-                
-                this.funcionario = null;
-                addChange( "id_funcionario", null );
-                
-            } else {
-                
-                if( !this.funcionario.equals( funcionario ) ) {
-                    
-                    this.funcionario.setIdFuncionario(funcionario.getIdFuncionario());
-                    this.funcionario.load();
-                    addChange( "id_funcionario", this.funcionario.getIdFuncionario());
-                    
+            if( !this.funcionario.equals( funcionario ) ) {
+                this.funcionario = funcionario;
+                addChange( "id_funcionario", this.funcionario.getIdFuncionario());
                 }
                 
             }
         }
-        
-    }
+  
+    
     
     public Cliente getCliente() {
         return cliente;
@@ -133,52 +122,68 @@ public class Venda extends DataAccessObject {
             
             if( produto != null ) {
                 
-                this.produto = new Produto();
-                this.produto.setIdProduto(produto.getIdProduto());
-                this.produto.load();
+                this.produto = produto;
                 addChange( "id_produto", this.produto.getIdProduto());
                 
             }
             
-        } else {
-            
-            if( produto == null ) {
-                
-                this.produto = null;
-                addChange( "id_produto", null );
-                
-            } else {
-                
+        } 
+           else {
                 if( !this.produto.equals( produto ) ) {
-                    
-                    this.produto.setIdProduto(produto.getIdProduto());
-                    this.produto.load();
+                    this.produto = produto;
                     addChange( "id_produto", this.produto.getIdProduto());
-                    
                 }
                 
             }
         }
         
-    }
+    
     
     
 
     @Override
     protected String getWhereClauseForOneEntry() {
         // utilizar somente chaves primárias
-        return " id_venda = " + this.idVenda;
+        return " id_vendas = " + this.idVenda;
     }
 
     @Override
     protected void fill(ArrayList<Object> data) {
-        // ordem do preenchimento segue a ordem definida na criação da tabela
-        this.idVenda = (int) data.get(0);
-        this.dataCompra = (Date) data.get(1);
-        this.funcionario = (Funcionario) data.get(2);
-        this.cliente = (Cliente) data.get(3);
-        this.produto = (Produto) data.get(4);
-
+        try {
+            // ordem do preenchimento segue a ordem definida na criação da tabela
+            this.idVenda = (int) data.get(0);
+            this.dataCompra = (Date) data.get(1);
+            
+            this.funcionario = new Funcionario();
+            this.funcionario.setIdFuncionario((int)data.get(2));
+            this.funcionario.load();
+            
+            this.cliente = new Cliente();
+            this.cliente.setIdCliente((int) data.get(3));
+            this.cliente.load();
+            
+            this.produto = new Produto();
+            this.produto.setIdProduto((int)data.get(4));
+            this.produto.load();
+        } catch (SQLException ex) {
+            Logger.getLogger(Venda.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Venda comparada = (Venda) obj;
+                
+        return this.getIdVenda() == comparada.getIdVenda();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 41 * hash + this.idVenda;
+        return hash;
+    }
+    
 
 }

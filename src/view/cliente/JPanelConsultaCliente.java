@@ -1,6 +1,9 @@
 package view.cliente;
 
 
+import Service.GetSelectedObjectService;
+import controller.DataAccessObject;
+import controller.LogTrack;
 import controller.ResultSetTableModel;
 import java.awt.event.WindowAdapter;
 import java.sql.SQLException;
@@ -13,19 +16,18 @@ import service.FilterTableService;
 
 
 
-public class JPanelConsultaCliente extends javax.swing.JPanel {
+public class JPanelConsultaCliente extends javax.swing.JPanel implements GetSelectedObjectService{
   
     private Cliente data;
-    private final String query = "SELECT * from clientes ";
+    private final String query = "SELECT * from Clientes ";
     private ResultSetTableModel result;
    private final TableRowSorter<TableModel> filter;
    
-    public JPanelConsultaCliente(Cliente data) throws SQLException {
+    public JPanelConsultaCliente(Cliente data,Boolean select) throws SQLException {
         initComponents();
         
+        if(select == true) jButtonSelecionar.setEnabled(true);
         this.data = data;
-     
-        jButtonSelecionar.setEnabled(false);
         
         
         result = new ResultSetTableModel(query);
@@ -45,7 +47,7 @@ public class JPanelConsultaCliente extends javax.swing.JPanel {
                 try {
                     result.setQuery(query);
                 } catch (SQLException ex) {
-                    Logger.getLogger(JFrameClienteCRUD.class.getName()).log(Level.SEVERE, null, ex);
+                    LogTrack.getInstance().addException(ex, false, crud);
                 }
             }
         });
@@ -73,13 +75,13 @@ public class JPanelConsultaCliente extends javax.swing.JPanel {
                     result.setQuery(query);
                     jButtonAlterar.setEnabled(true);
                 } catch (SQLException ex) {
-                    Logger.getLogger(JPanelConsultaCliente.class.getName()).log(Level.SEVERE, null, ex);
+                    LogTrack.getInstance().addException(ex, false, crud);
                 }
             }
         });
     
         } catch (SQLException ex) {
-            Logger.getLogger(JPanelConsultaCliente.class.getName()).log(Level.SEVERE, null, ex);
+            LogTrack.getInstance().addException(ex);
         }
     }  
 
@@ -163,31 +165,29 @@ public class JPanelConsultaCliente extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(92, 92, 92)
-                        .addComponent(jLabelFiltro)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
-                        .addComponent(jButtonFiltrar)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonSelecionar)
-                        .addGap(27, 27, 27)
-                        .addComponent(jButtonAlterar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonAdicionar))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(109, 109, 109)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 582, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(137, Short.MAX_VALUE))
+                .addGap(92, 92, 92)
+                .addComponent(jLabelFiltro)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
+                .addComponent(jButtonFiltrar)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonSelecionar)
+                .addGap(27, 27, 27)
+                .addComponent(jButtonAlterar)
+                .addGap(61, 61, 61)
+                .addComponent(jButtonAdicionar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 50, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 899, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addContainerGap(13, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButtonFiltrar)
@@ -205,16 +205,15 @@ public class JPanelConsultaCliente extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 9, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 9, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -243,7 +242,7 @@ public class JPanelConsultaCliente extends javax.swing.JPanel {
     private javax.swing.JButton jButtonAdicionar;
     private javax.swing.JButton jButtonAlterar;
     private javax.swing.JButton jButtonFiltrar;
-    private javax.swing.JButton jButtonSelecionar;
+    public javax.swing.JButton jButtonSelecionar;
     private javax.swing.JLabel jLabelFiltro;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -251,5 +250,21 @@ public class JPanelConsultaCliente extends javax.swing.JPanel {
     private javax.swing.JTable jTableCliente;
     private javax.swing.JTextPane jTextPaneFiltrar;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public DataAccessObject getSelected() {
+        Cliente cliente = new Cliente();
+        int row = jTableCliente.getSelectedRow();
+        if(row == -1) return null;
+        
+        cliente.setIdCliente((int) result.getValueAt(row, 0));
+       
+        try {
+            cliente.load();
+        } catch (SQLException ex) {
+           LogTrack.getInstance().addException(ex);
+        }
+        return cliente;
+    }
 
 }

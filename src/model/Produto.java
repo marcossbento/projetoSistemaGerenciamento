@@ -11,11 +11,11 @@ public class Produto extends DataAccessObject {
     private int idProduto;
     private String nomeProduto;
     private float preco;
-    private Date dataMaxTroca;
+    private int dataMaxTroca;
     
     
     public Produto() {
-        super("produtos");
+        super("Produtos");
     }    
 
     public int getIdProduto() {
@@ -27,7 +27,7 @@ public class Produto extends DataAccessObject {
         if( this.idProduto !=  idProduto ) {
             this.idProduto = idProduto;
             // informar que um campo da tabela foi alterado
-            addChange("codigo_produto", 
+            addChange("id_produto", 
                     this.idProduto);
         }
     }
@@ -57,14 +57,17 @@ public class Produto extends DataAccessObject {
         }
     }
 
-    public Date getDataMaxTroca() {
+    public int getDataMaxTroca() {
         return dataMaxTroca;
     }
 
-    public void setDataMaxTroca(Date dataMaxTroca) {
-        if(dataMaxTroca.equals(this.dataMaxTroca))return;
-        this.dataMaxTroca = dataMaxTroca;
-        addChange("data_max_troca", new SimpleDateFormat("yyyy/MM/dd").format(dataMaxTroca).replaceAll("\\p{Punct}", "-") );
+    public void setDataMaxTroca(int dataMaxTroca) {
+        if( this.dataMaxTroca !=  dataMaxTroca ) {
+            this.dataMaxTroca = dataMaxTroca;
+            // informar que um campo da tabela foi alterado
+            addChange("data_max_troca", 
+                    this.dataMaxTroca);
+        }
     }
     
     
@@ -81,7 +84,7 @@ public class Produto extends DataAccessObject {
         this.idProduto = (int) data.get(0);
         this.nomeProduto = (String) data.get(1);
         this.preco = (float) data.get(2);
-        this.dataMaxTroca = (Date) data.get(3);
+        this.dataMaxTroca = (int) data.get(3);
     }
 
 }

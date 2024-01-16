@@ -2,6 +2,7 @@ package model;
 
 import controller.DataAccessObject;
 import java.util.ArrayList;
+import java.util.Objects;
 import security.HashSecurity;
 
 public class Funcionario extends DataAccessObject {
@@ -126,6 +127,21 @@ public class Funcionario extends DataAccessObject {
         this.localidade.setAllElements( (String) data.get(8),  (String) data.get(6),  (String) data.get(5),  (String) data.get(7));
         this.senha = (String) data.get(9);
     }   
+
+    @Override
+    public boolean equals(Object obj) {
+       Funcionario comparado = (Funcionario) obj;
+       return this.idFuncionario == comparado.getIdFuncionario();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 67 * hash + this.idFuncionario;
+        hash = 67 * hash + Objects.hashCode(this.nomeFuncionario);
+        return hash;
+    }
     
+   
     
 }

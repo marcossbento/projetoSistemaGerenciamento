@@ -62,7 +62,7 @@ public abstract class DataAccessObject {
             sql += " (" + fields + ")";
             sql += " VALUES";
             sql += " (" + values + ")";
-
+            
             dbConnection.executeSQL(sql);
             this.novel = false;
             this.changed = false;

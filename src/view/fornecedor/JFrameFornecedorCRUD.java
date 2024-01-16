@@ -1,5 +1,6 @@
  package view.fornecedor;
 
+import controller.LogTrack;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -64,7 +65,7 @@ public class JFrameFornecedorCRUD extends javax.swing.JFrame {
             this.data.delete();
             this.dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
         } catch (SQLException ex) {
-            Logger.getLogger(JFrameFornecedorCRUD.class.getName()).log(Level.SEVERE, null, ex);
+            LogTrack.getInstance().addException(ex, false, this);
         }
     }
     
@@ -79,7 +80,7 @@ public class JFrameFornecedorCRUD extends javax.swing.JFrame {
             data.save();
             this.dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            LogTrack.getInstance().addException(ex, true, this);
         }
     }
 
@@ -91,7 +92,9 @@ public class JFrameFornecedorCRUD extends javax.swing.JFrame {
           
         else if(!jTextFieldFornecedor.getText().matches("\\d+")) throw new Exception("O campo ID deve ser um número.");
              
-        if(jTextFieldNome.getText().isEmpty() )  throw new Exception("Informe um NOME.");    
+        if(jTextFieldNome.getText().isEmpty() )  throw new Exception("Informe um NOME.");   
+        
+        if(jTextFieldTelefone.getText().isEmpty()) throw new Exception("Informe um telefone.");   
         
     
 

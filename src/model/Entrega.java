@@ -1,81 +1,96 @@
 package model;
 
 import controller.DataAccessObject;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 // mapeamento com a tabela especialidades
 public class Entrega extends DataAccessObject {
 
-    private int idVenda;
-    private Date dataCompra;
+    private int idEntrega;
+    private String nomeDistribuidora;
+    private Date previsaoEntrega;
     
-    //private float preco;
-    private Funcionario funcionario;
-    private Cliente cliente;
-    private Produto produto;
+    private Venda venda;
     
     
     public Entrega() {
-        super("vendas");
+        super("Entregas");
     }    
 
-    public int getIdVenda() {
-        return idVenda;
+    public int getIdEntrega() {
+        return idEntrega;
     }
 
-    public void setIdVenda(int idVenda) {
+    public void setIdEntrega(int idEntrega) {
         // verificar se o estado do objeto precisar alterar/modificar
-        if( this.idVenda !=  idVenda ) {
-            this.idVenda = idVenda;
+        if( this.idEntrega !=  idEntrega ) {
+            this.idEntrega = idEntrega;
             // informar que um campo da tabela foi alterado
-            addChange("id_venda", 
-                    this.idVenda);
+            addChange("id_entrega", 
+                    this.idEntrega);
         }
     }
 
-    public Date getDataCompra() {
-        return dataCompra;
+    public String getNomeDistribuidora() {
+        return nomeDistribuidora;
     }
 
-    public void setDataCompra(Date dataCompra) {
-        if(dataCompra.equals(this.dataCompra))return;
-        this.dataCompra = dataCompra;
-        addChange("data_compra", new SimpleDateFormat("yyyy/MM/dd").format(dataCompra).replaceAll("\\p{Punct}", "-") );
+    public void setNomeDistribuidora(String nomeDistribuidora) {
+        if( !nomeDistribuidora.equals( this.nomeDistribuidora ) ) {
+            this.nomeDistribuidora = nomeDistribuidora;
+             addChange("nome_distribuidora", 
+                    this.nomeDistribuidora);
+        }
     }
     
-    public Funcionario getFuncionario() {
-        return funcionario;
+    
+
+    public Date getPrevisaoEntrega() {
+        return previsaoEntrega;
+    }
+
+    public void setPrevisaoEntrega(Date previsaoEntrega) {
+        if(previsaoEntrega.equals(this.previsaoEntrega))return;
+        this.previsaoEntrega = previsaoEntrega;
+        addChange("previsao_entrega", new SimpleDateFormat("yyyy/MM/dd").format(previsaoEntrega).replaceAll("\\p{Punct}", "-") );
     }
     
-    public void setFuncionario(Funcionario funcionario) throws Exception {
+    public Venda getVenda() {
+        return venda;
+    }
+    
+    public void setVenda(Venda venda) throws Exception {
         
-        if( this.funcionario  == null ) {
+        if( this.venda  == null ) {
             
-            if( funcionario != null ) {
+            if( venda != null ) {
                 
-                this.funcionario = new Funcionario();
-                this.funcionario.setIdFuncionario(funcionario.getIdFuncionario());
-                this.funcionario.load();
-                addChange( "id_funcionario", this.funcionario.getIdFuncionario());
+                this.venda = new Venda();
+                this.venda.setIdVenda(venda.getIdVenda());
+                this.venda.load();
+                addChange( "id_vendas", this.venda.getIdVenda());
                 
             }
             
         } else {
             
-            if( funcionario == null ) {
+            if( venda == null ) {
                 
-                this.funcionario = null;
-                addChange( "id_funcionario", null );
+                this.venda = null;
+                addChange( "id_vendas", null );
                 
             } else {
                 
-                if( !this.funcionario.equals( funcionario ) ) {
+                if( !this.venda.equals( venda ) ) {
                     
-                    this.funcionario.setIdFuncionario(funcionario.getIdFuncionario());
-                    this.funcionario.load();
-                    addChange( "id_funcionario", this.funcionario.getIdFuncionario());
+                    this.venda.setIdVenda(venda.getIdVenda());
+                    this.venda.load();
+                    addChange( "id_vendas", this.venda.getIdVenda());
                     
                 }
                 
@@ -84,101 +99,26 @@ public class Entrega extends DataAccessObject {
         
     }
     
-    public Cliente getCliente() {
-        return cliente;
-    }
-    
-    public void setCliente(Cliente cliente) throws Exception {
-        
-        if( this.cliente  == null ) {
-            
-            if( cliente != null ) {
-                
-                this.cliente = new Cliente();
-                this.cliente.setIdCliente(cliente.getIdCliente());
-                this.cliente.load();
-                addChange( "id_cliente", this.cliente.getIdCliente());
-                
-            }
-            
-        } else {
-            
-            if( cliente == null ) {
-                
-                this.cliente = null;
-                addChange( "id_cliente", null );
-                
-            } else {
-                
-                if( !this.cliente.equals( cliente ) ) {
-                    
-                    this.cliente.setIdCliente(cliente.getIdCliente());
-                    this.cliente.load();
-                    addChange( "id_cliente", this.cliente.getIdCliente());
-                    
-                }
-                
-            }
-        }
-        
-    }
-    
-    public Produto getProduto() {
-        return produto;
-    }
-    
-    public void setProduto(Produto produto) throws Exception {
-        
-        if( this.produto  == null ) {
-            
-            if( produto != null ) {
-                
-                this.produto = new Produto();
-                this.produto.setIdProduto(produto.getIdProduto());
-                this.produto.load();
-                addChange( "id_produto", this.produto.getIdProduto());
-                
-            }
-            
-        } else {
-            
-            if( produto == null ) {
-                
-                this.produto = null;
-                addChange( "id_produto", null );
-                
-            } else {
-                
-                if( !this.produto.equals( produto ) ) {
-                    
-                    this.produto.setIdProduto(produto.getIdProduto());
-                    this.produto.load();
-                    addChange( "id_produto", this.produto.getIdProduto());
-                    
-                }
-                
-            }
-        }
-        
-    }
-    
-    
-
     @Override
     protected String getWhereClauseForOneEntry() {
         // utilizar somente chaves primárias
-        return " id_venda = " + this.idVenda;
+        return " id_entrega = " + this.idEntrega;
     }
 
     @Override
     protected void fill(ArrayList<Object> data) {
         // ordem do preenchimento segue a ordem definida na criação da tabela
-        this.idVenda = (int) data.get(0);
-        this.dataCompra = (Date) data.get(1);
-        this.funcionario = (Funcionario) data.get(2);
-        this.cliente = (Cliente) data.get(3);
-        this.produto = (Produto) data.get(4);
-
+        this.idEntrega = (int) data.get(0);
+        this.nomeDistribuidora = (String) data.get(1);
+        this.previsaoEntrega = (Date) data.get(2);
+        
+        this.venda = new Venda();
+        this.venda.setIdVenda((int)data.get(3));
+        try {
+            this.venda.load();
+        } catch (SQLException ex) {
+            Logger.getLogger(Entrega.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

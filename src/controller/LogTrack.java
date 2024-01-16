@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import java.util.Calendar;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -104,6 +105,29 @@ public class LogTrack {
         if( showDialog ) {
             JOptionPane.showMessageDialog( frame, exception.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE );
         }
+        
+    }
+    
+    public void addException( Exception exception ) {
+        
+        exception.printStackTrace();
+        
+        Calendar date = Calendar.getInstance();
+        String time = date.getTime().toString();
+        
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        exception.printStackTrace(pw);
+        
+        Element element = doc.createElement("exception");
+        
+        element.setAttribute( "time", time );
+        element.setTextContent( sw.toString() );
+        
+        root.appendChild(element);
+        
+        save();
+        
         
     }
     

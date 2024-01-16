@@ -1,5 +1,6 @@
 package view.funcionario;
 
+import controller.LogTrack;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -42,6 +43,7 @@ public class JFrameFuncionarioCRUD extends javax.swing.JFrame {
         data.setSalario(Float.parseFloat(jTextFieldSalario.getText()));
         data.setCargo(jComboBoxCargo.getSelectedItem().toString());
         data.setLocalidade(new Localidade().setAllElements(jTextFieldCidade.getText(), jTextFieldBairro.getText(), jTextFieldRua.getText(), jTextFieldNumero.getText()));
+        if(data.getSenha() == null||!data.getSenha().substring(1, 5).equals(jPasswordField.getText()))
         data.setSenha(jPasswordField.getText());
     }
     
@@ -58,7 +60,7 @@ public class JFrameFuncionarioCRUD extends javax.swing.JFrame {
         jTextFieldBairro.setText(localidade.getBairro());
         jTextFieldRua.setText(localidade.getRua());
         jTextFieldNumero.setText(localidade.getNumero());
-        jPasswordField.setText("123455");
+        jPasswordField.setText(data.getSenha().substring(1, 5));
     }
     
     
@@ -71,7 +73,7 @@ public class JFrameFuncionarioCRUD extends javax.swing.JFrame {
             this.data.delete();
             this.dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
         } catch (SQLException ex) {
-            Logger.getLogger(JFrameFuncionarioCRUD.class.getName()).log(Level.SEVERE, null, ex);
+            LogTrack.getInstance().addException(ex, false, this);
         }
     }
     
@@ -86,7 +88,7 @@ public class JFrameFuncionarioCRUD extends javax.swing.JFrame {
             data.save();
             this.dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            LogTrack.getInstance().addException(ex, true, this);
         }
     }
 
@@ -100,8 +102,13 @@ public class JFrameFuncionarioCRUD extends javax.swing.JFrame {
              
         if(jTextFieldNome.getText().isEmpty() )  throw new Exception("Informe um NOME.");    
         
-    
-
+        if(jPasswordField.getText().isEmpty() )  throw new Exception("Informe uma senha.");  
+        
+        if(jTextFieldCpf.getText().isEmpty() )  throw new Exception("Informe um CPF.");   
+        
+        if(jTextFieldSalario.getText().isEmpty() )  throw new Exception("Informe um salário.");
+        else if(!jTextFieldSalario.getText().matches("\\d+(\\.\\d+)?"))  throw new Exception("Informe um valor valido.");
+        
     }
    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -135,6 +142,7 @@ public class JFrameFuncionarioCRUD extends javax.swing.JFrame {
         jPasswordField = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Registro de Funcionário");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -194,7 +202,7 @@ public class JFrameFuncionarioCRUD extends javax.swing.JFrame {
 
         jSeparator2.setMinimumSize(new java.awt.Dimension(35, 10));
 
-        jComboBoxCargo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ATENDENTE", "FUNCIONARIO" }));
+        jComboBoxCargo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ATENDENTE", "GERENTE" }));
         jComboBoxCargo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxCargoActionPerformed(evt);
@@ -260,7 +268,7 @@ public class JFrameFuncionarioCRUD extends javax.swing.JFrame {
                                 .addComponent(jLabel13)
                                 .addGap(18, 18, 18)
                                 .addComponent(jTextFieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(83, Short.MAX_VALUE))
+                .addGap(91, 91, 91))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jButtonExcluir)
@@ -287,7 +295,7 @@ public class JFrameFuncionarioCRUD extends javax.swing.JFrame {
                     .addComponent(jTextFieldCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextFieldSalario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addGap(18, 22, Short.MAX_VALUE)
+                .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jComboBoxCargo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)

@@ -1,6 +1,7 @@
 package view.funcionario;
 
 
+import controller.LogTrack;
 import controller.ResultSetTableModel;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -16,15 +17,19 @@ import service.FilterTableService;
 public class JPanelConsultaFuncionario extends javax.swing.JPanel {
   
     private Funcionario data ;
-    private final String query = "SELECT * from funcionarios";
+    private final String query = "SELECT * from Funcionarios";
     private ResultSetTableModel result;
     private final TableRowSorter<TableModel> filter;
    
     public JPanelConsultaFuncionario(Funcionario data) throws SQLException {
         initComponents();
-        
-        
         this.data = data;
+        if(!data.getCargo().toUpperCase().equals("GERENTE"))  {
+            jButtonAdicionar.setEnabled(false);
+            jButtonAlterar.setEnabled(false);
+        }
+        
+        
      
         jButtonSelecionar.setEnabled(false);
         
@@ -50,7 +55,7 @@ public class JPanelConsultaFuncionario extends javax.swing.JPanel {
                 try {
                     result.setQuery(query);
                 } catch (SQLException ex) {
-                    Logger.getLogger(JPanelConsultaFuncionario.class.getName()).log(Level.SEVERE, null, ex);
+                    LogTrack.getInstance().addException(ex, false, crud);
                 }
             }
         });
@@ -79,14 +84,13 @@ public class JPanelConsultaFuncionario extends javax.swing.JPanel {
                     result.setQuery(query);
                     jButtonAlterar.setEnabled(true);
                 } catch (SQLException ex) {
-                    Logger.getLogger(JPanelConsultaFuncionario.class.getName()).log(Level.SEVERE, null, ex);
+                    LogTrack.getInstance().addException(ex, false, crud);
                 }
             }
         });
     
         } catch (SQLException ex) {
-            
-            Logger.getLogger(JPanelConsultaFuncionario.class.getName()).log(Level.SEVERE, null, ex);
+            LogTrack.getInstance().addException(ex);
         }
     }  
 
@@ -99,7 +103,7 @@ public class JPanelConsultaFuncionario extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButtonAdicionar1 = new javax.swing.JButton();
+        jButtonAdicionar = new javax.swing.JButton();
         jButtonAlterar = new javax.swing.JButton();
         jButtonSelecionar = new javax.swing.JButton();
         jButtonFiltrar1 = new javax.swing.JButton();
@@ -109,10 +113,10 @@ public class JPanelConsultaFuncionario extends javax.swing.JPanel {
         jTableFuncionario = new javax.swing.JTable();
         jLabelFiltro = new javax.swing.JLabel();
 
-        jButtonAdicionar1.setText("Adicionar");
-        jButtonAdicionar1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonAdicionar.setText("Adicionar");
+        jButtonAdicionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAdicionar1ActionPerformed(evt);
+                jButtonAdicionarActionPerformed(evt);
             }
         });
 
@@ -170,36 +174,35 @@ public class JPanelConsultaFuncionario extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(92, 92, 92)
-                        .addComponent(jLabelFiltro)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
-                        .addComponent(jButtonFiltrar1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonSelecionar)
-                        .addGap(27, 27, 27)
-                        .addComponent(jButtonAlterar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonAdicionar1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(109, 109, 109)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 582, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(92, 92, 92)
+                .addComponent(jLabelFiltro)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
+                .addComponent(jButtonFiltrar1)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonSelecionar)
+                .addGap(27, 27, 27)
+                .addComponent(jButtonAlterar)
+                .addGap(61, 61, 61)
+                .addComponent(jButtonAdicionar)
                 .addContainerGap(137, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButtonFiltrar1)
                         .addComponent(jButtonSelecionar)
-                        .addComponent(jButtonAdicionar1)
+                        .addComponent(jButtonAdicionar)
                         .addComponent(jButtonAlterar))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabelFiltro)
@@ -225,9 +228,9 @@ public class JPanelConsultaFuncionario extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonAdicionar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionar1ActionPerformed
+    private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
         add();
-    }//GEN-LAST:event_jButtonAdicionar1ActionPerformed
+    }//GEN-LAST:event_jButtonAdicionarActionPerformed
 
     private void jButtonAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAlterarActionPerformed
         change();
@@ -247,7 +250,7 @@ public class JPanelConsultaFuncionario extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonAdicionar1;
+    private javax.swing.JButton jButtonAdicionar;
     private javax.swing.JButton jButtonAlterar;
     private javax.swing.JButton jButtonFiltrar1;
     private javax.swing.JButton jButtonSelecionar;

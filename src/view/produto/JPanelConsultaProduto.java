@@ -1,30 +1,33 @@
 package view.produto;
 
 
+import Service.GetSelectedObjectService;
+import controller.DataAccessObject;
+import controller.LogTrack;
 import controller.ResultSetTableModel;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import model.Cliente;
 import model.Produto;
 import service.FilterTableService;
 
 
 
-public class JPanelConsultaProduto extends javax.swing.JPanel {
+public class JPanelConsultaProduto extends javax.swing.JPanel implements GetSelectedObjectService{
   
     private Produto data;
-    private final String query = "SELECT * from produtos ";
+    private final String query = "SELECT * from Produtos ";
     private ResultSetTableModel result;
    private final TableRowSorter<TableModel> filter;
    
-    public JPanelConsultaProduto(Produto data) throws SQLException {
+    public JPanelConsultaProduto(Produto data,Boolean select) throws SQLException {
         initComponents();
         
+        if(select == true) jButtonSelecionar.setEnabled(true);
         this.data = data;
-     
-        jButtonSelecionar.setEnabled(false);
         
         
         result = new ResultSetTableModel(query);
@@ -48,7 +51,7 @@ public class JPanelConsultaProduto extends javax.swing.JPanel {
                 try {
                     result.setQuery(query);
                 } catch (SQLException ex) {
-                    Logger.getLogger(JFrameProdutoCRUD.class.getName()).log(Level.SEVERE, null, ex);
+                    LogTrack.getInstance().addException(ex, false, crud);
                 }
             }
         });
@@ -76,13 +79,13 @@ public class JPanelConsultaProduto extends javax.swing.JPanel {
                     result.setQuery(query);
                     jButtonAlterar.setEnabled(true);
                 } catch (SQLException ex) {
-                    Logger.getLogger(JPanelConsultaProduto.class.getName()).log(Level.SEVERE, null, ex);
+                    LogTrack.getInstance().addException(ex, false, crud);
                 }
             }
         });
     
         } catch (SQLException ex) {
-            Logger.getLogger(JPanelConsultaProduto.class.getName()).log(Level.SEVERE, null, ex);
+            LogTrack.getInstance().addException(ex);
         }
     }  
 
@@ -166,30 +169,26 @@ public class JPanelConsultaProduto extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(92, 92, 92)
-                        .addComponent(jLabelFiltro)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
-                        .addComponent(jButtonFiltrar)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonSelecionar)
-                        .addGap(27, 27, 27)
-                        .addComponent(jButtonAlterar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonAdicionar))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(109, 109, 109)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 582, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(92, 92, 92)
+                .addComponent(jLabelFiltro)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
+                .addComponent(jButtonFiltrar)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonSelecionar)
+                .addGap(27, 27, 27)
+                .addComponent(jButtonAlterar)
+                .addGap(61, 61, 61)
+                .addComponent(jButtonAdicionar)
                 .addContainerGap(137, Short.MAX_VALUE))
+            .addComponent(jScrollPane3)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -215,9 +214,9 @@ public class JPanelConsultaProduto extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 9, Short.MAX_VALUE)
+                .addGap(0, 1, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 9, Short.MAX_VALUE))
+                .addGap(0, 1, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -246,7 +245,7 @@ public class JPanelConsultaProduto extends javax.swing.JPanel {
     private javax.swing.JButton jButtonAdicionar;
     private javax.swing.JButton jButtonAlterar;
     private javax.swing.JButton jButtonFiltrar;
-    private javax.swing.JButton jButtonSelecionar;
+    public javax.swing.JButton jButtonSelecionar;
     private javax.swing.JLabel jLabelFiltro;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -254,4 +253,21 @@ public class JPanelConsultaProduto extends javax.swing.JPanel {
     private javax.swing.JTable jTableProduto;
     private javax.swing.JTextPane jTextPaneFiltrar;
     // End of variables declaration//GEN-END:variables
+    
+    @Override
+    public DataAccessObject getSelected() {
+        Produto produto = new Produto();
+        int row = jTableProduto.getSelectedRow();
+        if(row == -1) return null;
+        
+        produto.setIdProduto((int) result.getValueAt(row, 0));
+       
+        try {
+            produto.load();
+        } catch (SQLException ex) {
+            LogTrack.getInstance().addException(ex);
+        }
+        return produto;
+    }
+
 }

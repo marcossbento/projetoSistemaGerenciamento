@@ -1,11 +1,9 @@
 package view.produto;
 
 import com.toedter.calendar.JCalendar;
+import controller.LogTrack;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,7 +41,7 @@ public class JFrameProdutoCRUD extends javax.swing.JFrame {
         data.setIdProduto(Integer.parseInt(jTextFieldIdProduto.getText()));
         data.setPreco(Float.parseFloat(jTextFieldPreco.getText()));
         data.setNomeProduto(jTextFieldNome.getText());
-        
+        data.setDataMaxTroca(Integer.parseInt(jTextFieldDataMaxTroca.getText()));
     }
     
     
@@ -52,7 +50,7 @@ public class JFrameProdutoCRUD extends javax.swing.JFrame {
         jTextFieldIdProduto.setText(String.valueOf(data.getIdProduto()));
         jTextFieldNome.setText(data.getNomeProduto());
         jTextFieldPreco.setText(String.valueOf(data.getPreco()));
-        jDateChooser.setDate(data.getDataMaxTroca());
+        jTextFieldDataMaxTroca.setText(String.valueOf(data.getDataMaxTroca()));
     }
     
     
@@ -65,7 +63,7 @@ public class JFrameProdutoCRUD extends javax.swing.JFrame {
             this.data.delete();
             this.dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
         } catch (SQLException ex) {
-            Logger.getLogger(JFrameProdutoCRUD.class.getName()).log(Level.SEVERE, null, ex);
+            LogTrack.getInstance().addException(ex, false, this);
         }
     }
     
@@ -80,7 +78,7 @@ public class JFrameProdutoCRUD extends javax.swing.JFrame {
             data.save();
             this.dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            LogTrack.getInstance().addException(ex, true, this);
         }
     }
 
@@ -94,7 +92,11 @@ public class JFrameProdutoCRUD extends javax.swing.JFrame {
              
         if(jTextFieldNome.getText().isEmpty() )  throw new Exception("Informe um NOME.");    
         
-    
+        if(jTextFieldPreco.getText().isEmpty() )  throw new Exception("Informe um valor.");
+        
+        else if(!jTextFieldPreco.getText().matches("\\d+(\\.\\d+)?"))  throw new Exception("Informe um valor valido.");
+        
+        
 
     }
    @SuppressWarnings("unchecked")
@@ -111,8 +113,8 @@ public class JFrameProdutoCRUD extends javax.swing.JFrame {
         jTextFieldPreco = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
-        jDateChooser = new com.toedter.calendar.JDateChooser();
         jLabel3 = new javax.swing.JLabel();
+        jTextFieldDataMaxTroca = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -171,6 +173,12 @@ public class JFrameProdutoCRUD extends javax.swing.JFrame {
 
         jLabel3.setText("Data Max. Troca");
 
+        jTextFieldDataMaxTroca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldDataMaxTrocaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -189,9 +197,9 @@ public class JFrameProdutoCRUD extends javax.swing.JFrame {
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addComponent(jLabel3)
                                         .addGap(38, 38, 38)))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jDateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextFieldIdProduto))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextFieldIdProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextFieldDataMaxTroca, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(88, 88, 88)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
@@ -232,15 +240,15 @@ public class JFrameProdutoCRUD extends javax.swing.JFrame {
                             .addComponent(jLabel5)
                             .addComponent(jTextFieldPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(jDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                            .addComponent(jTextFieldDataMaxTroca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonExcluir)
                     .addComponent(jButtonSalvar))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
@@ -273,18 +281,22 @@ public class JFrameProdutoCRUD extends javax.swing.JFrame {
     private void jTextFieldPrecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPrecoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldPrecoActionPerformed
+
+    private void jTextFieldDataMaxTrocaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldDataMaxTrocaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldDataMaxTrocaActionPerformed
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonExcluir;
     private javax.swing.JButton jButtonSalvar;
-    private com.toedter.calendar.JDateChooser jDateChooser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JTextField jTextFieldDataMaxTroca;
     private javax.swing.JTextField jTextFieldIdProduto;
     private javax.swing.JTextField jTextFieldNome;
     private javax.swing.JTextField jTextFieldPreco;
